@@ -17,19 +17,6 @@ type System struct {
 	Value *big.Int
 }
 
-/*
-docstring for OKVS
-:n: rows
-:m: columns
-:w: length of band
-The choice of parameters:
-m = (1 + epsilon)n
-w = O(lambda / epsilon + log n)
-For example:
-m = 2^10, epsilon = 0.1,
-==> n = (1+0.1) * 2^10
-*/
-
 var one = big.NewInt(1)
 var zero = big.NewInt(0)
 
@@ -81,7 +68,6 @@ func (r *OKVS) Init(kvs []KV) []System {
 				systems[i].Row[j] = zero
 			}
 		}
-		//fmt.Println(systems[i].Row)
 		systems[i].Value = kvs[i].Value
 	}
 	for i := 0; i < r.M; i++ {
@@ -131,9 +117,8 @@ func (r *OKVS) Encode(kvs []KV) *OKVS {
 		}
 	}
 	for i := r.N - 1; i >= 0; i-- {
-		//reszeroBytes := make([]byte, 4)
 		res := big.NewInt(0)
-		for j := 0; j < r.M; j++ {
+		for j := systems[i].Pos; j < r.W+systems[i].Pos; j++ {
 			if systems[i].Row[j].Cmp(zero) != 0 {
 				res = new(big.Int).Add(res, new(big.Int).Mul(systems[i].Row[j], r.P[j]))
 			}

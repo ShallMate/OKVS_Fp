@@ -50,8 +50,9 @@ func main() {
 	okvs.Encode(kvs)
 	for i := 0; i < int(n); i++ {
 		v := okvs.Decode(kvs[i].Key)
-		fmt.Println(v)
-		fmt.Println(kvs[i].Value)
+		if v.Cmp(kvs[i].Value) != 0 {
+			fmt.Println("decoding false")
+		}
 	}
 
 }
